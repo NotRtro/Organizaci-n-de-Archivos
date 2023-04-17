@@ -1,14 +1,3 @@
----
-title: "Codigos Estadística"
-subtitle: "armani"
-output:
-  html_document:
-    toc: true
-    toc_float: true
-    toc_depth: 3
-    number_sections: TRUE
----
-
 # Proyecto 1: Organización de Archivos
 
 Este proyecto consiste en implementar dos técnicas de organización de archivos para datos reales que se encuentran en al menos dos archivos planos. Las técnicas que se implementarán son: Sequential File, AVL File, ISAM-Sparse Index, Extendible Hashing y B+ Tree.
