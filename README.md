@@ -25,13 +25,11 @@ Los registros en un archivo secuencial se almacenan uno tras otro, sin ningún e
 
 A continuación, te muestro un ejemplo de cómo crear un archivo secuencial en C++ y cómo realizar una búsqueda en él:
 
-`// Ejemplo de código C++
-#include <iostream>
-
-int main() {
-    std::cout << "Hola, mundo!" << std::endl;
-    return 0;
-}`
+```
+var sumar2 = function(numero) {
+  return numero + 2;
+}
+```
 
 ### 2. AVL File:
 
