@@ -25,11 +25,51 @@ Los registros en un archivo secuencial se almacenan uno tras otro, sin ningún e
 
 A continuación, te muestro un ejemplo de cómo crear un archivo secuencial en C++ y cómo realizar una búsqueda en él:
 
-```
-var sumar2 = function(numero) {
-  return numero + 2;
+```cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+struct Registro {
+    string nombre;
+    int edad;
+    // ... otros campos
+};
+
+void agregarRegistro(ofstream& archivo, const Registro& registro) {
+    archivo.write(reinterpret_cast<const char*>(&registro), sizeof(registro));
+}
+
+void buscarRegistro(ifstream& archivo, const string& nombreBuscado) {
+    Registro registro;
+    while (archivo.read(reinterpret_cast<char*>(&registro), sizeof(registro))) {
+        if (registro.nombre == nombreBuscado) {
+            cout << "Se encontró el registro: " << registro.nombre << " " << registro.edad << endl;
+            return;
+        }
+    }
+    cout << "No se encontró ningún registro con el nombre " << nombreBuscado << endl;
+}
+
+int main() {
+    ofstream archivo("miArchivo.dat", ios::binary);
+    Registro registro1 = {"Juan", 25};
+    Registro registro2 = {"Pedro", 30};
+    agregarRegistro(archivo, registro1);
+    agregarRegistro(archivo, registro2);
+    archivo.close();
+
+    ifstream archivoLectura("miArchivo.dat", ios::binary);
+    buscarRegistro(archivoLectura, "Pedro");
+    archivoLectura.close();
+    return 0;
 }
 ```
+En este ejemplo, creamos un archivo binario llamado "miArchivo.dat" y agregamos dos registros (nombre y edad) al archivo utilizando la función agregarRegistro(). Luego, abrimos el archivo para lectura y realizamos una búsqueda de un registro con un nombre específico utilizando la función buscarRegistro(). La función recorre el archivo secuencial y compara el nombre de cada registro con el nombre buscado hasta encontrar un registro con el nombre deseado. Si no se encuentra ningún registro con el nombre buscado, se imprime un mensaje apropiado.
+
+Es importante tener en cuenta que el archivo secuencial no es muy eficiente para realizar búsquedas en grandes conjuntos de datos, ya que se debe leer cada registro desde el principio del archivo hasta encontrar el registro deseado. Además, la eliminación de registros puede ser complicada, ya que puede dejar "huecos" en el archivo si se eliminan registros intermedios.
 
 ### 2. AVL File:
 
