@@ -1,3 +1,14 @@
+---
+title: "Codigos Estadística"
+subtitle: "armani"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    number_sections: TRUE
+---
+
 # Proyecto 1: Organización de Archivos
 
 Este proyecto consiste en implementar dos técnicas de organización de archivos para datos reales que se encuentran en al menos dos archivos planos. Las técnicas que se implementarán son: Sequential File, AVL File, ISAM-Sparse Index, Extendible Hashing y B+ Tree.
@@ -647,9 +658,7 @@ La función print recorre el árbol en orden de profundidad y muestra las llaves
 El programa de ejemplo crea un árbol B+ con un número máximo de llaves por nodo de 3 y luego inserta 24 llaves. Finalmente, se eliminan dos llaves y se muestra el árbol resultante después de cada eliminación.
 
 
-
-
-
+## Consideraciones:
 
 
 Se debe escoger una de las siguientes combinaciones de técnicas de organización de archivos:
