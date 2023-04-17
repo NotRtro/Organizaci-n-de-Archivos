@@ -72,6 +72,79 @@ En este ejemplo, creamos un archivo binario llamado "miArchivo.dat" y agregamos 
 Es importante tener en cuenta que el archivo secuencial no es muy eficiente para realizar búsquedas en grandes conjuntos de datos, ya que se debe leer cada registro desde el principio del archivo hasta encontrar el registro deseado. Además, la eliminación de registros puede ser complicada, ya que puede dejar "huecos" en el archivo si se eliminan registros intermedios.
 
 ### 2. AVL File:
+La estrategia de organización de archivos AVLFile en C++ es una técnica que permite almacenar registros en un archivo de forma ordenada y balanceada mediante la utilización de árboles AVL. Esta técnica es útil cuando se necesitan realizar operaciones de búsqueda, inserción y eliminación eficientes en un archivo de datos.
+
+Un archivo AVLFile consta de una serie de nodos, cada uno de los cuales contiene un registro y un apuntador al siguiente nodo en el archivo. Los nodos se organizan en forma de árbol AVL, en el cual cada nodo tiene una altura que representa la longitud del camino más largo desde ese nodo hasta una hoja.
+
+Cuando se realiza una operación de inserción en un archivo AVLFile, se busca la posición correcta en el árbol AVL para el nuevo registro y se inserta en un nuevo nodo. Luego, se realiza una serie de rotaciones en el árbol AVL para mantener el equilibrio y la altura adecuada.
+
+Por otro lado, cuando se realiza una operación de búsqueda en un archivo AVLFile, se realiza una búsqueda binaria en el árbol AVL para encontrar el nodo que contiene el registro deseado. Esto permite una búsqueda eficiente en tiempo logarítmico en el número de nodos del árbol.
+
+Finalmente, cuando se realiza una operación de eliminación en un archivo AVLFile, se busca el nodo que contiene el registro a eliminar y se realiza una serie de rotaciones para mantener el equilibrio y la altura adecuada en el árbol AVL. Luego, se marca el nodo como eliminado, pero no se elimina físicamente del archivo hasta que se realice una operación de compactación en el archivo.
+
+En resumen, la estrategia de organización de archivos AVLFile en C++ utiliza árboles AVL para mantener un archivo de datos ordenado y balanceado, lo que permite realizar operaciones de búsqueda, inserción y eliminación eficientes en tiempo logarítmico en el número de nodos del árbol.
+
+Para comenzar, se necesita definir una estructura para los nodos del árbol AVL que contendrá un registro y los punteros a sus hijos izquierdo y derecho, así como una variable de equilibrio para mantener el balance del árbol. Por ejemplo:
+
+```cpp
+struct NodoAVL {
+    Registro registro;
+    NodoAVL *izquierdo;
+    NodoAVL *derecho;
+    int equilibrio;
+};
+```
+Luego, se necesita definir la estructura para el archivo AVLFile, que contendrá un puntero al nodo raíz del árbol y un identificador para el archivo. Por ejemplo:
+```cpp
+struct AVLFile {
+    NodoAVL *raiz;
+    int archivoID;
+};
+```
+Para insertar un registro en un archivo AVLFile, se necesita implementar una función recursiva que recorra el árbol AVL comparando las llaves de los registros para determinar la posición correcta del nuevo registro. Luego, se realiza una serie de rotaciones en el árbol para mantener su equilibrio y altura adecuada. Por ejemplo:
+```cpp
+void insertarRegistroAVL(NodoAVL *&raiz, Registro registro) {
+    if (raiz == NULL) {
+        raiz = new NodoAVL;
+        raiz->registro = registro;
+        raiz->izquierdo = NULL;
+        raiz->derecho = NULL;
+        raiz->equilibrio = 0;
+    } else if (registro.key < raiz->registro.key) {
+        insertarRegistroAVL(raiz->izquierdo, registro);
+        if (altura(raiz->izquierdo) - altura(raiz->derecho) == 2) {
+            if (registro.key < raiz->izquierdo->registro.key) {
+                rotacionSimpleIzquierda(raiz);
+            } else {
+                rotacionDobleIzquierda(raiz);
+            }
+        }
+    } else if (registro.key > raiz->registro.key) {
+        insertarRegistroAVL(raiz->derecho, registro);
+        if (altura(raiz->derecho) - altura(raiz->izquierdo) == 2) {
+            if (registro.key > raiz->derecho->registro.key) {
+                rotacionSimpleDerecha(raiz);
+            } else {
+                rotacionDobleDerecha(raiz);
+            }
+        }
+    }
+    raiz->equilibrio = max(altura(raiz->izquierdo), altura(raiz->derecho)) + 1;
+}
+```
+En el código anterior, las funciones **rotacionSimpleIzquierda**, **rotacionDobleIzquierda**, **rotacionSimpleDerecha** y **rotacionDobleDerecha** son funciones que realizan las rotaciones necesarias en el árbol AVL para mantener su equilibrio. La función altura devuelve la altura de un nodo del árbol.
+
+Para realizar una búsqueda en un archivo **AVLFile**, se puede implementar una función recursiva que recorra el árbol AVL comparando las llaves de los registros hasta encontrar el registro deseado. Por ejemplo:
+```cpp
+Registro buscarRegistroAVL(NodoAVL *raiz, int key) {
+    if (raiz == NULL) {
+        Registro registroVacio;
+        return registroVacio;
+    } else if (key == raiz->registro.key) {
+        return raiz->registro;
+    } else
+```
+
 
 ### 3. ISAM-Sparse Index:
 
