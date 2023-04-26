@@ -15,21 +15,31 @@ using namespace std;
 const int maxColision = 7;
 const int maxFillFactor = 15;
 
+struct Record{
+    char cod[7];
+    char prendra[15];
+    char genero;
+    int precio;
+    int stock;
+    char marca[5];
+    Record(){}
+    Record(char* _cod, char* _prenda, char _genero, int _precio, int _stock, char* _marca){
+        cod[7] = _cod[7];
+        prendra[15] = _prenda[15];
+        genero = _genero;
+        precio = _precio;
+        stock = _stock;
+        marca[5] = _marca[5];
+    }
+};
 
 class Hash{
     struct Entry{
-        struct Record{
-            char cod[7];
-            char prendra[15];
-            char genero[1];
-            int precio;
-            int stock;
-            char marca[5];
-        };
-        Record array[maxColision];
+        Record array[maxColision]{};
         size_t sig = -1;
         size_t size = 0;
-        Entry(){}
+        Entry(){
+        }
         Entry(Record _record){
             array[size] = _record;
             size++;
@@ -40,7 +50,7 @@ class Hash{
 public:
     Hash(string _filename):filename(_filename){}
 
-    void set(Entry::Record record) {
+    void set(Record record) {
         fstream file(filename, ios::in | ios::out | ios::binary);
         size_t hashcode = getHashCode(record.cod);
         int index = hashcode % maxColision;
@@ -64,7 +74,7 @@ public:
 
     }
 
-    Entry::Record &get(string key) {
+    Record &get(string key) {
         size_t hashcode = getHashCode(key);
         int index = hashcode % maxColision;
         ifstream file(filename, ios::binary);
@@ -79,7 +89,7 @@ public:
         }
         return get(temp.sig,  key);
     }
-    Entry::Record &get(long pos, string key){
+    Record &get(long pos, string key){
         if (pos == -1)throw std::out_of_range("Key not found");
         ifstream file(filename, ios::binary);
         Entry temp;
@@ -192,7 +202,7 @@ private:
         file.close();
         return nBytes;
     }
-    void set(Entry::Record record, long father){
+    void set(Record record, long father){
         fstream file(filename, ios::in | ios::out | ios::binary);
         Entry temp;
         file.seekg(father*sizeof (Entry));

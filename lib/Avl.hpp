@@ -227,7 +227,6 @@ private:
     }
     void remove(long node, char value[5], long father = 0) {
         if (node == -1) return;
-
         if (value < getNode(node).first.data.cod) {
             remove(getNode(node).first.left, value, node);
             balance(node);
@@ -255,4 +254,5 @@ private:
 
     }
 };
+
 #endif //AVLARCHIVOS_FINAL_H
