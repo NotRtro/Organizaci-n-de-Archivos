@@ -6,28 +6,38 @@
 #define AVLARCHIVOS_FINAL_H
 #include <iostream>
 #include <fstream>
+#include <functional>
 using namespace std;
 
 class AVL
 {
-private:
-    struct Record{
+public:
+    struct RecordAVL{
         char cod[7];
-        char prendra[15];
-        char genero[1];
+        char prenda[15];
+        char genero;
         int precio;
         int stock;
         char marca[5];
+        RecordAVL(){}
+        RecordAVL(char* _cod, char* _prenda, char _genero, int _precio, int _stock, char* _marca){
+            copy_n(_cod, 7, cod);
+            copy_n(_prenda, 15, prenda);
+            genero = _genero;
+            precio  = _precio;
+            stock = _stock;
+            copy_n(_marca, 5, marca);
+        }
     };
     struct NodeBT {
-        Record data;
+        RecordAVL data;
         long left;
         long right;
         long height;
         NodeBT() {
             left = right = -1;
         }
-        NodeBT(Record record){
+        NodeBT(RecordAVL record){
             left = right = -1;
             this->data = record;
         }
@@ -47,23 +57,21 @@ private:
 public:
     AVL(string filename){
         this->filename = filename;
-        root = (sizeC() > 0) ?  0 : -1;
+        root = -1;
     }
-    Record find(char key[5])
+    RecordAVL find(char key[5])
     {
         ifstream file(filename, ios::binary);
-        Record temp = find(file, root, key);
+        RecordAVL temp = find(file, root, key);
         file.close();
         return temp;
     }
-    void insert(Record alumno1) {
-        fstream file(filename, ios::in | ios::out | ios::binary);
-        insert(file, this->root, alumno1,true);
-        file.close();
+    void insert(RecordAVL alumno1) {
+        insert(this->root, alumno1,true);
     }
 
 private:
-    Record find(ifstream &file, long nodepos, char key[5]){
+    RecordAVL find(ifstream &file, long nodepos, char key[5]){
         if (nodepos == -1)
             throw std::out_of_range( "No se encontro" );
         else {
@@ -79,8 +87,9 @@ private:
                 return temp.data;
         }
     }
-    void insert(fstream &file, long node, Record value, bool sit) { // sit == true -> left
-        if (node == -1) {                                           // sit == false -> rigth
+    void insert(long node, RecordAVL value, bool sit) { // sit == true -> left
+        fstream file(filename, ios::in | ios::out | ios::binary);
+        if (node == -1) {// sit == false -> rigth
             NodeBT temp(value);
             NodeBT aux = getNode(node).first;
             (sit) ? aux.left = sizeC()/sizeof(NodeBT) : aux.right = sizeC()/sizeof(NodeBT) ;
@@ -88,18 +97,20 @@ private:
             file.write((char *) &temp, sizeof(NodeBT));
             file.seekp(node*sizeof(NodeBT));
             file.write((char*)&aux, sizeof(NodeBT));
+            file.close();
             return;
         }
         NodeBT temp;
         file.seekg(node * sizeof ( NodeBT));
         file.read((char*)&temp, sizeof(NodeBT));
         if (temp.data.cod > value.cod)
-            insert(file, temp.left, value, true);
+            insert(temp.left, value, true);
         else if (value.cod < temp.data.cod)
-            insert(file,temp.right, value, false);
+            insert(temp.right, value, false);
 
         updateHeight(temp, node);
         balance(node);
+        file.close();
     }
 
     void updateHeight(NodeBT& node, long pos) {
@@ -142,7 +153,7 @@ private:
         file.seekg(pos * sizeof(NodeBT));
         file.read((char*)&temp, sizeof(NodeBT));
         file.close();
-        return pair(temp, pos);
+        return  pair(temp, pos);
 
     }
     int balancingFactor(NodeBT node) {
@@ -191,7 +202,7 @@ private:
         updateHeight(node, pos);
         file.close();
     }
-    Record minValue(long node) {
+    RecordAVL minValue(long node) {
         ifstream file(filename, ios::binary);
         NodeBT temp = getNode(node).first;
         if (temp.left == -1) {
@@ -201,7 +212,7 @@ private:
         return minValue(temp.left);
     }
 
-    Record maxValue(long node) {
+    RecordAVL maxValue(long node) {
         ifstream file(filename, ios::binary);
         NodeBT temp = getNode(node).first;
         if (temp.right == -1) {
@@ -236,7 +247,7 @@ private:
         } else if (getNode(node).first.left >-1 && getNode(node).first.right > -1) {
             ofstream file(filename, ios::binary);
             NodeBT temp = getNode(node).first;
-            Record aux = minValue(temp.right);
+            RecordAVL aux = minValue(temp.right);
             temp.data = aux;
             file.seekp(node*sizeof (NodeBT));
             file.write((char *)&temp, sizeof(NodeBT));

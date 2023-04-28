@@ -10,37 +10,46 @@
 #include <utility>
 #include <vector>
 #include <forward_list>
+#include <functional>
 using namespace std;
 
 const int maxColision = 7;
 const int maxFillFactor = 15;
 
-struct Record{
+struct RecordHash{
     char cod[7];
-    char prendra[15];
+    char prenda[15];
     char genero;
     int precio;
     int stock;
     char marca[5];
-    Record(){}
-    Record(char* _cod, char* _prenda, char _genero, int _precio, int _stock, char* _marca){
-        cod[7] = _cod[7];
-        prendra[15] = _prenda[15];
+    RecordHash(){}
+    RecordHash(char* _cod, char* _prenda, char _genero, int _precio, int _stock, char* _marca){
+        copy_n(_cod, 7, cod);
+        copy_n(_prenda, 15, prenda);
         genero = _genero;
-        precio = _precio;
+        precio  = _precio;
         stock = _stock;
-        marca[5] = _marca[5];
+        copy_n(_marca, 5, marca);
     }
-};
+    void display(){
+        cout<<cod<<endl;
+        cout<<prenda<<endl;
+        cout<<genero<<endl;
+        cout<<precio<<endl;
+        cout<<stock<<endl;
+        cout<<marca<<endl;
+    }
+    };
 
 class Hash{
     struct Entry{
-        Record array[maxColision]{};
+        RecordHash array[maxColision]{};
         size_t sig = -1;
         size_t size = 0;
         Entry(){
         }
-        Entry(Record _record){
+        Entry(RecordHash _record){
             array[size] = _record;
             size++;
         }
@@ -48,16 +57,24 @@ class Hash{
 
     string filename;
 public:
-    Hash(string _filename):filename(_filename){}
+    Hash(string _filename):filename(_filename){
+        ofstream file(filename, ios::binary);
+        for (int i = 0; i < maxFillFactor; ++i) {
+            file.seekp(i*sizeof(Entry));
+            Entry temp;
+;           file.write((char*)&temp, sizeof(Entry));
+        }
+        file.close();
+    }
 
-    void set(Record record) {
+    void set(RecordHash record) {
         fstream file(filename, ios::in | ios::out | ios::binary);
         size_t hashcode = getHashCode(record.cod);
-        int index = hashcode % maxColision;
+        int index = hashcode % maxFillFactor;
         Entry temp;
-        file.seekg(index*sizeof(Entry));
+        file.seekg(index*sizeof(Entry)+index);
         file.read((char*)&temp, sizeof (Entry));
-        if (get(record.cod).cod == record.cod) throw std::out_of_range("El dato ya existe no puede sobreescribir");
+        if (search(record.cod)) throw std::out_of_range("El dato ya existe no puede sobreescribir");
         if (temp.size == maxColision){
             set(record, index);
             file.close();
@@ -74,39 +91,32 @@ public:
 
     }
 
-    Record &get(string key) {
-        size_t hashcode = getHashCode(key);
-        int index = hashcode % maxColision;
+    vector<RecordHash> get(long key) {
+        vector<RecordHash> result;
         ifstream file(filename, ios::binary);
         Entry temp;
-        file.seekg(index*sizeof(Entry));
+        file.seekg(key*sizeof(Entry));
         file.read((char*)&temp, sizeof (Entry));
-        for (auto &it : temp.array) {
-            if (it.cod == key) {
-                file.close();
-                return  it;
-            }
+        for (int i = 0; i < temp.size; ++i) {
+            result.emplace_back(temp.array[i]);
         }
-        return get(temp.sig,  key);
+        if (temp.sig > -1) get(temp.sig, result);
+        return result;
     }
-    Record &get(long pos, string key){
-        if (pos == -1)throw std::out_of_range("Key not found");
+    void get(long pos, vector<RecordHash> &final){
         ifstream file(filename, ios::binary);
         Entry temp;
         file.seekg(pos*sizeof(Entry));
         file.read((char*)&temp, sizeof (Entry));
-        for (auto &it : temp.array) {
-            if (it.cod == key) {
-                file.close();
-                return  it;
-            }
+        for (int i = 0; i < temp.size; ++i) {
+            final.emplace_back(temp.array[i]);
         }
-        return get(temp.sig,  key);
+        if (temp.sig > -1) get(temp.sig, final);
     }
     void remove(string key) {
         if (!search(key)) throw std::out_of_range ("Key not found");
         size_t hashcode = getHashCode(key);
-        int index = hashcode % maxColision;
+        int index = hashcode % maxFillFactor;
         fstream file(filename, ios::in | ios::out | ios::binary);
         Entry temp;
         file.seekg(index * sizeof(Entry));
@@ -137,7 +147,7 @@ public:
     }
     bool search(string key) {
         size_t hashcode = getHashCode(key);
-        int index = hashcode % maxColision;
+        int index = hashcode % maxFillFactor;
         ifstream file(filename, ios::binary);
         Entry temp;
         file.seekg(index*sizeof(Entry));
@@ -202,7 +212,7 @@ private:
         file.close();
         return nBytes;
     }
-    void set(Record record, long father){
+    void set(RecordHash record, long father){
         fstream file(filename, ios::in | ios::out | ios::binary);
         Entry temp;
         file.seekg(father*sizeof (Entry));
