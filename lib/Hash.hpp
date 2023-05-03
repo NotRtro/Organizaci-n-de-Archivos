@@ -18,19 +18,28 @@ const int maxFillFactor = 15;
 
 struct RecordHash{
     char cod[7];
-    char prenda[15];
-    char genero;
-    int precio;
+    char prenda[10];
+    char genero[1];
+    float precio;
     int stock;
-    char marca[5];
+    char marca[7];
     RecordHash(){}
-    RecordHash(char* _cod, char* _prenda, char _genero, int _precio, int _stock, char* _marca){
-        copy_n(_cod, 7, cod);
-        copy_n(_prenda, 15, prenda);
-        genero = _genero;
-        precio  = _precio;
-        stock = _stock;
-        copy_n(_marca, 5, marca);
+    RecordHash(string _cod, string _prenda, string _genero, float _precio, int _stock, string _marca){
+        for(int i=0;i<7;i++){
+            this->cod[i]= _cod[i];
+        }
+        for(int i=0;i<10;i++){
+            this->prenda[i]=_prenda[i];
+        }
+        for(int i=0;i<1;i++){
+            this->genero[i]=_genero[i];
+        }
+        this->precio=_precio;
+        this->stock=_stock;
+
+        for(int i=0;i<7;i++){
+            this->marca[i]=_marca[i];
+        }
     }
     void display(){
         cout<<cod<<endl;
@@ -44,7 +53,7 @@ struct RecordHash{
 
 class Hash{
     struct Entry{
-        RecordHash array[maxColision]{};
+        RecordHash array[maxColision];
         size_t sig = -1;
         size_t size = 0;
         Entry(){
@@ -58,7 +67,7 @@ class Hash{
     string filename;
 public:
     Hash(string _filename):filename(_filename){
-        ofstream file(filename, ios::binary);
+        ofstream file(filename, ios::app | ios::binary);
         for (int i = 0; i < maxFillFactor; ++i) {
             file.seekp(i*sizeof(Entry));
             Entry temp;
@@ -68,11 +77,11 @@ public:
     }
 
     void set(RecordHash record) {
-        fstream file(filename, ios::in | ios::out | ios::binary);
+        fstream file(filename, std::ios::out|std::ios::in|std::ios::ate);
         size_t hashcode = getHashCode(record.cod);
         int index = hashcode % maxFillFactor;
         Entry temp;
-        file.seekg(index*sizeof(Entry)+index);
+        file.seekg(index*sizeof(Entry));
         file.read((char*)&temp, sizeof (Entry));
         if (search(record.cod)) throw std::out_of_range("El dato ya existe no puede sobreescribir");
         if (temp.size == maxColision){
@@ -84,7 +93,7 @@ public:
             temp.array[temp.size] = record;
             temp.size++;
             file.seekp(index*sizeof (Entry));
-            file.write((char*)&temp, sizeof (Entry));
+            file.write((char*)&temp, sizeof(Entry));
             file.close();
         }
         //Completar para el caso cuando el set tiene que actualiza
@@ -97,6 +106,7 @@ public:
         Entry temp;
         file.seekg(key*sizeof(Entry));
         file.read((char*)&temp, sizeof (Entry));
+        if (temp.size == 0) throw std::out_of_range ("Dont elements for key");
         for (int i = 0; i < temp.size; ++i) {
             result.emplace_back(temp.array[i]);
         }
@@ -117,7 +127,7 @@ public:
         if (!search(key)) throw std::out_of_range ("Key not found");
         size_t hashcode = getHashCode(key);
         int index = hashcode % maxFillFactor;
-        fstream file(filename, ios::in | ios::out | ios::binary);
+        fstream file(filename, std::ios::out|std::ios::in|std::ios::ate);
         Entry temp;
         file.seekg(index * sizeof(Entry));
         file.read((char *) &temp, sizeof(Entry));
@@ -148,7 +158,7 @@ public:
     bool search(string key) {
         size_t hashcode = getHashCode(key);
         int index = hashcode % maxFillFactor;
-        ifstream file(filename, ios::binary);
+        ifstream file(filename,ios::app | ios::binary);
         Entry temp;
         file.seekg(index*sizeof(Entry));
         file.read((char*)&temp, sizeof (Entry));
@@ -174,10 +184,14 @@ public:
         }
         return search(temp.sig,  key);
     }
+    size_t getHashCode(string cod) {
+        hash<string> ptr_hash;
+        return ptr_hash(cod);
+    }
 private:
     void remove(long pos, string key){
         if (pos == -1) throw std::out_of_range ("Key dont Fund");
-        fstream file(filename, ios::in | ios::out | ios::binary);
+        fstream file(filename, std::ios::out|std::ios::in|std::ios::ate);
         Entry temp;
         file.seekg(pos*sizeof(Entry));
         file.read((char*)&temp,sizeof(Entry));
@@ -213,7 +227,7 @@ private:
         return nBytes;
     }
     void set(RecordHash record, long father){
-        fstream file(filename, ios::in | ios::out | ios::binary);
+        fstream file(filename, std::ios::out|std::ios::in|std::ios::ate);
         Entry temp;
         file.seekg(father*sizeof (Entry));
         file.read((char*)&temp,sizeof(Entry));
@@ -226,10 +240,7 @@ private:
         file.write((char*)&temp, sizeof(Entry));
     }
 
-    size_t getHashCode(string cod) {
-        hash<string> ptr_hash;
-        return ptr_hash(cod);
-    }
+
 };
 
 #endif //AVLARCHIVOS_HASH_H

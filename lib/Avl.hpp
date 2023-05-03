@@ -14,19 +14,28 @@ class AVL
 public:
     struct RecordAVL{
         char cod[7];
-        char prenda[15];
-        char genero;
-        int precio;
+        char prenda[10];
+        char genero[1];
+        float precio;
         int stock;
-        char marca[5];
+        char marca[7];
         RecordAVL(){}
-        RecordAVL(char* _cod, char* _prenda, char _genero, int _precio, int _stock, char* _marca){
-            copy_n(_cod, 7, cod);
-            copy_n(_prenda, 15, prenda);
-            genero = _genero;
-            precio  = _precio;
-            stock = _stock;
-            copy_n(_marca, 5, marca);
+        RecordAVL(string _cod, string _prenda, string _genero, float _precio, int _stock, string _marca){
+            for(int i=0;i<7;i++){
+                this->cod[i]= _cod[i];
+            }
+            for(int i=0;i<10;i++){
+                this->prenda[i]=_prenda[i];
+            }
+            for(int i=0;i<1;i++){
+                this->genero[i]=_genero[i];
+            }
+            this->precio=_precio;
+            this->stock=_stock;
+
+            for(int i=0;i<7;i++){
+                this->marca[i]=_marca[i];
+            }
         }
     };
     struct NodeBT {
@@ -37,7 +46,7 @@ public:
         NodeBT() {
             left = right = -1;
         }
-        NodeBT(RecordAVL record){
+        NodeBT(RecordAVL record){   
             left = right = -1;
             this->data = record;
         }
@@ -53,6 +62,9 @@ private:
         file.close();
         return nBytes;
     }
+    int sizeNode(){
+        return 45;
+    }
 
 public:
     AVL(string filename){
@@ -61,9 +73,7 @@ public:
     }
     RecordAVL find(char key[5])
     {
-        ifstream file(filename, ios::binary);
-        RecordAVL temp = find(file, root, key);
-        file.close();
+        RecordAVL temp = find(root, key);
         return temp;
     }
     void insert(RecordAVL alumno1) {
@@ -71,7 +81,8 @@ public:
     }
 
 private:
-    RecordAVL find(ifstream &file, long nodepos, char key[5]){
+    RecordAVL find(long nodepos, char key[5]){
+        ifstream file(filename, ios::binary);
         if (nodepos == -1)
             throw std::out_of_range( "No se encontro" );
         else {
@@ -79,16 +90,21 @@ private:
             file.seekg(nodepos * sizeof(NodeBT));
             file.read((char*)&temp, sizeof(NodeBT));
 
-            if (key < temp.data.cod)
-                return find(file, temp.left, key);
-            else if (key > temp.data.cod)
-                return find(file, temp.right, key);
+            if (key < temp.data.cod) {
+                file.close();
+                return find(temp.left, key);
+            }
+            else if (key > temp.data.cod) {
+                file.close();
+                return find(temp.right, key);
+            }
             else
+                file.close();
                 return temp.data;
         }
     }
     void insert(long node, RecordAVL value, bool sit) { // sit == true -> left
-        fstream file(filename, ios::in | ios::out | ios::binary);
+        fstream file(filename, std::ios::out|std::ios::in|std::ios::ate);
         if (node == -1) {// sit == false -> rigth
             NodeBT temp(value);
             NodeBT aux = getNode(node).first;
@@ -117,7 +133,7 @@ private:
         int leftHeight = height(node.left);
         int rightHeight = height(node.right);
         node.height = (leftHeight > rightHeight ? leftHeight : rightHeight) + 1;
-        ofstream file(filename, ios::out | ios::binary);
+        ofstream file(filename, std::ios::out|std::ios::in|std::ios::ate);
         file.seekp(pos*sizeof(NodeBT));
         file.write((char*)&node, sizeof(NodeBT));
 
@@ -153,7 +169,7 @@ private:
         file.seekg(pos * sizeof(NodeBT));
         file.read((char*)&temp, sizeof(NodeBT));
         file.close();
-        return  pair(temp, pos);
+        return  pair<NodeBT, long>(temp, pos);
 
     }
     int balancingFactor(NodeBT node) {
@@ -173,7 +189,7 @@ private:
         pair<NodeBT, long> temp2 = getNode(node.left);
 
         node = temp.first;
-        fstream file(filename,ios::out | ios::binary);
+        fstream file(filename,std::ios::out|std::ios::in|std::ios::ate);
         file.seekp(pos * sizeof (NodeBT));
         file.write((char*)&node, sizeof (NodeBT));
         file.seekp( temp2.second * sizeof (NodeBT));
@@ -192,7 +208,7 @@ private:
         pair<NodeBT, long> temp2 = getNode(node.right);
         node = temp.first;
 
-        fstream file(filename,ios::out | ios::binary);
+        fstream file(filename,std::ios::out|std::ios::in|std::ios::ate);
         file.seekp(pos * sizeof (NodeBT));
         file.write((char*)&node, sizeof (NodeBT));
         file.seekp( temp2.second * sizeof (NodeBT));
@@ -236,7 +252,7 @@ private:
         }
         return isBalanced(getNode(node).first.left) && isBalanced(getNode(node).first.right);
     }
-    void remove(long node, char value[5], long father = 0) {
+    void remove(long node, char value[5], long father = 0, bool sit = true) {
         if (node == -1) return;
         if (value < getNode(node).first.data.cod) {
             remove(getNode(node).first.left, value, node);
@@ -245,7 +261,7 @@ private:
             remove(getNode(node).first.right, value, node);
             balance(node);
         } else if (getNode(node).first.left >-1 && getNode(node).first.right > -1) {
-            ofstream file(filename, ios::binary);
+            fstream file(filename, std::ios::out|std::ios::in|std::ios::ate);
             NodeBT temp = getNode(node).first;
             RecordAVL aux = minValue(temp.right);
             temp.data = aux;
@@ -254,13 +270,36 @@ private:
             balance(node);
             remove(temp.right, temp.data.cod, node);
         } else {
-            ofstream file(filename, ios::binary);
-            NodeBT temp = getNode(father).first;
-            temp.left = -1;
-            file.seekp(father*sizeof (NodeBT));
-            file.write((char*)&temp, sizeof(NodeBT));
-            balance(father);
-            file.close();
+            if(getNode(node).first.right > -1) {
+                fstream file(filename, std::ios::out | std::ios::in | std::ios::ate);
+                NodeBT temp = getNode(father).first;
+                temp.right = getNode(node).first.right;
+                file.seekp(father*sizeof (NodeBT));
+                file.write((char *)&temp, sizeof(NodeBT));
+            }else if (getNode(node).first.left > -1){
+                fstream file(filename, std::ios::out | std::ios::in | std::ios::ate);
+                NodeBT temp = getNode(father).first;
+                temp.left = getNode(node).first.left;
+                file.seekp(father*sizeof (NodeBT));
+                file.write((char *)&temp, sizeof(NodeBT));
+            }else{
+                fstream file(filename, std::ios::out | std::ios::in | std::ios::ate);
+                NodeBT temp = getNode(father).first;
+                if (node == temp.right){
+                    temp.right = -1;
+                    file.seekp(father*sizeof (NodeBT));
+                    file.write((char *)&temp, sizeof(NodeBT));
+                }else if(node == temp.left){
+                    temp.left = -1;
+                    file.seekp(father*sizeof (NodeBT));
+                    file.write((char *)&temp, sizeof(NodeBT));
+                }else{
+                    temp.right = temp.left = -1;
+                    file.seekp(father*sizeof (NodeBT));
+                    file.write((char *)&temp, sizeof(NodeBT));
+                }
+            }
+
         }
 
     }
