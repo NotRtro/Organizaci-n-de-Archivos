@@ -287,4 +287,4 @@ d. Se debe mostrar los resultados de forma amigable al usuario, utilizando la si
 ## GUI de referencia
 La GUI debe mostrar los resultados de las operaciones realizadas de forma amigable al usuario. Se sugiere la siguiente GUI de referencia:
 
-![GUI de referencia](https://i.imgur.com/rOuO7yE.png)
+![GUI de referencia](/imagenes/gui.jpg)
