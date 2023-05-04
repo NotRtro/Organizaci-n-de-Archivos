@@ -123,7 +123,12 @@ std::vector<Token> tokenize(std::string query) {
 
 void SELECT_HASH(vector<Token> tokens, Hash temp){
     if(tokens[1].value == "*"){
-        temp.get();
+        vector<vector<RecordHash>> temp_2 = temp.getAll();
+        for (auto i = temp_2.begin(); i != temp_2.end(); i++) {
+            for (auto j = i->begin(); j != i->end(); j++) {
+                j->display();
+            }
+        }
     }
 }
 
@@ -191,7 +196,6 @@ void DELETE_AVL(vector<Token>& tokens, AVL temp){
             key_delete = tokens[i].value;
         }
     }
-    temp.
     cout<<"Eliminado"<<endl;
 }
 
@@ -207,7 +211,7 @@ void SELECT_SECUENTIAL(vector<Token> tokens, squential temp){
         for(int i = 0; i < 7; i++) {
             end_char[i] = end[i];
         }
-        temp.rangeSearch(begin_char,end_char);
+        //temp.rangeSearch(begin_char,end_char);
     }
 }
 
@@ -240,7 +244,7 @@ void DELETE_SECUENTIAL(vector<Token>& tokens, squential temp){
     }
     char key_delete[7];
     strcpy(key_delete, key.substr(0,7).c_str());
-    temp.remove(key_delete);
+    //temp.remove(key_delete);
     cout<<"Eliminado"<<endl;
 }
 
@@ -262,10 +266,10 @@ void Consulta_HASH(vector<Token> Tokens){
 
 void Consulta_AVL(vector<Token> Tokens){
     AVL temp("Data_from_Structurs/dataAvl.dat");
-    if(Tokens[0].value == "SELECT"){
+    /*if(Tokens[0].value == "SELECT"){
         return SELECT_AVL(Tokens,temp);
-    }
-    else if(Tokens[0].value == "INSERT"){
+    }*/
+    if(Tokens[0].value == "INSERT"){
         return INSERT_AVL(Tokens, temp);
     }
     else if(Tokens[0].value == "DELETE"){
@@ -276,7 +280,7 @@ void Consulta_AVL(vector<Token> Tokens){
     }
 }
 
-void Consulta_SECUENTIAL(vector<Token> Tokens){
+/*void Consulta_SECUENTIAL(vector<Token> Tokens){
     squential temp();
     if(Tokens[0].value == "SELECT"){
         return SELECT_SECUENTIAL(Tokens,temp);
@@ -290,4 +294,4 @@ void Consulta_SECUENTIAL(vector<Token> Tokens){
     else{
         cout<<"no es una consulta admitida";
     }
-}
+}*/

@@ -2,7 +2,7 @@
 #include "lib/Avl.hpp"
 #include "lib/Hash.hpp"
 #include "lib/Secuential.hpp"
-
+#include "parser/parser.hpp"
 using namespace std;
 
 int main(){
@@ -67,4 +67,9 @@ int main(){
     //temp.set(temp3);
     //temp.set(temp4);
     //temp.set(temp5);
+    std::string sql;
+    cout<<"Ingresa consulta"<<endl;
+    getline(cin, sql);
+    vector<Token> consulta = tokenize(sql);
+    Consulta_HASH(consulta);
 }
