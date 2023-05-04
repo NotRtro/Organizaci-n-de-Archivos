@@ -188,6 +188,21 @@ public:
         hash<string> ptr_hash;
         return ptr_hash(cod);
     }
+    vector<vector<RecordHash>> getAll(){
+        vector<vector<RecordHash>> full;
+        ifstream file(filename, ios::in | ios::binary);
+        for (int i = 0; i < maxFillFactor; ++i) {
+            Entry temp;
+            file.seekg(i*sizeof(Entry));
+            file.read((char*)&temp, sizeof(Entry));
+            vector<RecordHash> aux;
+            for (int j = 0; j < temp.size; ++j) {
+                aux.emplace_back(temp.array[i]);
+            }
+            full.emplace_back(aux);
+        }
+        return full;
+    }
 private:
     void remove(long pos, string key){
         if (pos == -1) throw std::out_of_range ("Key dont Fund");
