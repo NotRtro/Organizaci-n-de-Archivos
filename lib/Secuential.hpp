@@ -213,7 +213,29 @@ public:
     }
     template<typename T>
     vector<Record> rangeSearch(T begin_key, T end_key){
+        rebuild();
         vector<Record>retornar;
+        Record inicio,final;inicio.id=begin_key;final.puntero=end_key;
+        pair<Record,pair<int,char>>encontrado= search_Record(inicio);
+        if(encontrado.first!=inicio)
+            throw "LLave invalida";
+        else{
+            while(inicio!=final){
+                ifstream file;
+                retornar.push_back(inicio);
+                if(inicio.puntero.second=='a'){
+                    file.open(aux,ios::binary);
+                    file.seekg(inicio.puntero.first*sizeof(Record));
+                    file.read((char*)&inicio,sizeof(Record));
+                }else{
+                    file.open(datos,ios::binary);
+                    file.seekg(inicio.puntero.first*sizeof(Record));
+                    file.read((char*)&inicio,sizeof(Record));
+                }
+            }
+            retornar.push_back(final);
+        }
+        return retornar;
     }
 
     template<typename T>
@@ -227,7 +249,11 @@ public:
             file.open(datos,ios::out|ios::in|ios::ate|ios::binary);
             file.seekg(encontrado.second.first*sizeof(Record));
             file.read((char*)&tmp,sizeof(Record));
-            tmp.puntero.second='r';
+            if(tmp.puntero.second=='d'){
+                tmp.puntero.second='w';
+            }else{
+                tmp.puntero.second='x';
+            }
             file.seekg(encontrado.second.first*sizeof(Record));
             file.write((char*)&tmp,sizeof(Record));
         }else{
@@ -245,7 +271,11 @@ public:
                     file.read((char*)&tmp*sizeof(Record));
                 }
                 if(prn==tmp){
-                    tmp.puntero.second='r';
+                    if(tmp.puntero.second=='d'){
+                        tmp.puntero.second='z';
+                    }else{
+                        tmp.puntero.second='y';
+                    }
                     file.seekg(antes.puntero.first*sizeof(Record));
                     file.write((char*)&tmp,sizeof(Record));
                 }else{
@@ -290,19 +320,56 @@ public:
         Record prenda;
         prenda.puntero=header;
         ofstream vecWrite(datosVector, ios::out | ios::binary);
-        while(prenda.puntero.first!=-1||prenda.puntero.second!='d'){
+        //0d
+        while(prenda.puntero.first!=-1||prenda.puntero.second!='d'){//2z
             if(prenda.puntero.second=='a'){
                 ifstream file(aux,ios::binary);
                 file.seekg(prenda.puntero.first*sizeof(Record));
-                file.read((char*)&prenda, sizeof(Record));
-                vecWrite.write((char*)&prenda,sizeof(Record));
+                file.read((char*)&prenda, sizeof(Record));//
+                if(prenda.puntero.second=='d'||prenda.puntero.second=='a')
+                    vecWrite.write((char*)&prenda,sizeof(Record));
                 file.close();
             }else if(prenda.puntero.second=='d'){
                 ifstream file(datos,ios::binary);
                 file.seekg(prenda.puntero.first*sizeof(Record));
                 file.read((char*)&prenda,sizeof(Record));
-                vecWrite.write((char*)&prenda,sizeof(Record));
+                if(prenda.puntero.second=='d'||prenda.puntero.second=='a')
+                    vecWrite.write((char*)&prenda,sizeof(Record));
+                vecWrite.write((char*)&prenda,sizeof(Record));//benson 0a
                 file.close();
+            }else{
+                if(prenda.puntero.second=='w'){
+                    ifstream file(datos,ios::binary);
+                    file.seekg(prenda.puntero.first*sizeof(Record));
+                    file.read((char*)&prenda, sizeof(Record));
+                    if(prenda.puntero.second=='d'||prenda.puntero.second=='a')
+                        vecWrite.write((char*)&prenda,sizeof(Record));
+                    file.close();
+                }
+                else if(prenda.puntero.second=='x'){
+                    ifstream file(aux,ios::binary);
+                    file.seekg(prenda.puntero.first*sizeof(Record));
+                    file.read((char*)&prenda, sizeof(Record));
+                    if(prenda.puntero.second=='d'||prenda.puntero.second=='a')
+                        vecWrite.write((char*)&prenda,sizeof(Record));
+                    file.close();
+                }
+                else if(prenda.puntero.second=='y'){
+                    ifstream file(aux,ios::binary);
+                    file.seekg(prenda.puntero.first*sizeof(Record));
+                    file.read((char*)&prenda, sizeof(Record));
+                    if(prenda.puntero.second=='d'||prenda.puntero.second=='a')
+                        vecWrite.write((char*)&prenda,sizeof(Record));
+                    file.close();
+                }else{
+                    ifstream file(datos,ios::binary);
+                    file.seekg(prenda.puntero.first*sizeof(Record));
+                    file.read((char*)&prenda, sizeof(Record));
+                    if(prenda.puntero.second=='d'||prenda.puntero.second=='a')
+                        vecWrite.write((char*)&prenda,sizeof(Record));
+                    file.close();
+                }
+
             }
         }
         vecWrite.close();
