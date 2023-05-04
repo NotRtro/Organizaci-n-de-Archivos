@@ -32,6 +32,13 @@ int main(){
     aux.insert(prueba54);
     AVL::RecordAVL prueba55("ddddddd", "zzzzzzzzzz", "m", 1020, 21, "pumas");
     aux.insert(prueba55);
+    aux.insert(prueba55);
+    aux.insert(prueba55);
+    aux.insert(prueba55);
+    aux.insert(prueba55);
+
+
+
 
     vector<AVL::NodeBT> pruebaaaa = aux.rangeSearch("aaaaaaa","zzzzzzz");
     cout<<pruebaaaa.size()<<endl;
@@ -40,6 +47,7 @@ int main(){
         cout<< temp.right<<endl;
         cout<<temp.left<<endl;
     }
+    //aux.pretyprint();
 //    vector<RecordHash> prueba1 = temp.get(0);
 //    for (auto & i : prueba1) {
 //        i.display();

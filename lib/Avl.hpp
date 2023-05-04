@@ -98,13 +98,25 @@ public:
         return temp;
     }
     void insert(RecordAVL alumno1) {
-        insert(this->root, alumno1,true);
+        insert(this->root, alumno1,true, -1);
     }
 
     vector<NodeBT> rangeSearch(string begin, string end){
         vector<NodeBT> result;
         rangeSearch(root, begin, end, result);
         return result;
+    }
+    void pretyprint(long  temp = 0){
+        if (root == -1) {
+            return;
+        }
+        ifstream file(filename, ios::binary);
+        NodeBT aux;
+        file.seekg(temp*sizeof(NodeBT));
+        file.read((char*)&aux, sizeof(NodeBT));
+        pretyprint(aux.left);
+        cout<< aux.data.cod <<endl;
+        pretyprint(aux.right);
     }
 private:
     RecordAVL find(long nodepos, char key[5]){
@@ -129,7 +141,7 @@ private:
                 return temp.data;
         }
     }
-    void insert(long node, RecordAVL value, bool sit, long father = -1) { // sit == true -> left
+    void insert(long node, RecordAVL value, bool sit, long father) { // sit == true -> left
         fstream file(filename, std::ios::out|std::ios::in|std::ios::ate);
         if (node == -1) {// sit == false -> rigth
             NodeBT temp(value);
@@ -137,13 +149,15 @@ private:
             file.write((char *)&temp, sizeof(NodeBT));
             if(father > -1){
                 NodeBT aux = getNode(father).first;
-                (sit) ? aux.left = counter : aux.right = counter;
+                if (sit) aux.left = counter;
+                else aux.right = counter;
                 file.seekp(father*sizeof(NodeBT));
                 file.write((char*)&aux, sizeof(NodeBT));
+                file.close();
             }
             counter++;
             file.close();
-            updateHeight(temp, father);
+            //updateHeight(temp, father);
             root = 0;
             return;
         }
@@ -161,7 +175,7 @@ private:
 
         file.close();
         updateHeight(temp, node);
-        balance(node);
+        //balance(node);
     }
 
     void updateHeight(NodeBT& node, long pos) {
