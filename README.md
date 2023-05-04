@@ -12,6 +12,12 @@ El resto solo seria ejecutar el código
 ## Estructura del proyecto:
 
 ## Colaboradores:
+ANGEL TITO
+Rodo
+Ronaldo
+Salva
+Jeffry
+
 
 ### 1. Sequential File:
 Una técnica de organización de archivos llamada Sequential File (también conocida como "archivo secuencial") es un método simple y común para almacenar y buscar datos en un archivo en memoria secundaria.
