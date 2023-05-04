@@ -6,10 +6,18 @@ Este proyecto consiste en implementar dos técnicas de organización de archivos
 El objetivo del estudiante es entender y aplicar los algoritmos de almacenamiento de archivos físicos y acceso concurrente para poder implementarlo en la gestión de bases de datos organizadas en archivos de texto o archivos binarios.
 
 ## Instrucciones de compilación:
-Para poder correr la GUI, necesitamos descargar la carpeta GUI, luego de eso, instalaremos QTCreator
+Para poder correr la GUI, necesitamos descargar la carpeta GUI, luego de eso, instalaremos QTCreator.
+Una vez instalado el programa nos dirigiremos a "Abrir proyecto" y seleccionaremos la carpeta descargada "GUI".
+El resto solo seria ejecutar el código
 ## Estructura del proyecto:
 
 ## Colaboradores:
+ANGEL TITO
+Rodo
+Ronaldo
+Salva
+Jeffry
+
 
 ### 1. Sequential File:
 Una técnica de organización de archivos llamada Sequential File (también conocida como "archivo secuencial") es un método simple y común para almacenar y buscar datos en un archivo en memoria secundaria.
