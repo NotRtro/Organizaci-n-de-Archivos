@@ -69,6 +69,9 @@ public:
     friend bool operator==(Record &r1, Record &r2) {
         return r1.id == r2.id;
     }
+    friend bool operator!=(Record &r1, Record &r2) {
+        return r1.id != r2.id;
+    }
 
     bool add(Record key) {
 
@@ -268,7 +271,7 @@ public:
                 while(prn!=tmp&&tmp.puntero.second!='d'){
                     antes=tmp;
                     file.seekg(tmp.puntero.first*sizeof(Record));
-                    file.read((char*)&tmp*sizeof(Record));
+                    file.read((char*)&tmp,sizeof(Record));
                 }
                 if(prn==tmp){
                     if(tmp.puntero.second=='d'){
