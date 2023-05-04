@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <cctype>
 #include "../lib/Hash.hpp"
+#include "../lib/Avl.hpp"
+#include "../lib/Secuential.hpp"
 
 using namespace std;
 
@@ -156,11 +158,11 @@ void DELETE_HASH(vector<Token>& tokens, Hash temp){
     cout<<"Eliminado"<<endl;
 }
 
-void SELECT_AVL(vector<Token> tokens, AVL temp){
-    if(tokens[1].value == '*'){
-        temp.get();
+/*void SELECT_AVL(vector<Token> tokens, AVL temp){
+    if(tokens[1].value == "*"){
+        vector<NodeBT> vec_temp = temp.rangeSearch("aaaaaaa","aaaaaaa");
     }
-}
+}*/
 
 void INSERT_AVL(vector<Token> tokens, AVL temp){
     if(tokens[2].value != "Tienda"){
@@ -173,8 +175,8 @@ void INSERT_AVL(vector<Token> tokens, AVL temp){
             valores.push_back(tokens[j].value);
         }
     }
-    RecordHash agregacion(valores[0], valores[1], valores[2], stoi(valores[3]), stoi(valores[4]), valores[5]);
-    temp.set(agregacion);
+    AVL::RecordAVL agregacion(valores[0], valores[1], valores[2], stoi(valores[3]), stoi(valores[4]), valores[5]);
+    temp.insert(agregacion);
     cout<<"se hizo la insercion"<<endl;
 };
 
@@ -189,13 +191,23 @@ void DELETE_AVL(vector<Token>& tokens, AVL temp){
             key_delete = tokens[i].value;
         }
     }
-    temp.remove(key_delete);
+    temp.remove()
     cout<<"Eliminado"<<endl;
 }
 
 void SELECT_SECUENTIAL(vector<Token> tokens, squential temp){
-    if(tokens[1].value == '*'){
-        temp.get();
+    if(tokens[1].value == "*"){
+        string begin = "E0000000";
+        string end = "E0000010";
+        char begin_char[7];
+        char end_char[7];
+        for(int i = 0; i < 7; i++) {
+            begin_char[i] = begin[i];
+        }
+        for(int i = 0; i < 7; i++) {
+            end_char[i] = end[i];
+        }
+        temp.rangeSearch(begin_char,end_char);
     }
 }
 
@@ -210,8 +222,8 @@ void INSERT_SECUENTIAL(vector<Token> tokens, squential temp){
             valores.push_back(tokens[j].value);
         }
     }
-    RecordHash agregacion(valores[0], valores[1], valores[2], stoi(valores[3]), stoi(valores[4]), valores[5]);
-    temp.set(agregacion);
+    squential::Record agregacion(valores[0], valores[1], valores[2], stoi(valores[3]), valores[4], valores[5]);
+    temp.add(agregacion);
     cout<<"se hizo la insercion"<<endl;
 };
 
@@ -220,12 +232,14 @@ void DELETE_SECUENTIAL(vector<Token>& tokens, squential temp){
         cout<<"No admitido"<<endl;
         return;
     }
-    string key_delete = "";
+    string key = "";
     for (int i = 0; i < tokens.size(); ++i) {
         if (tokens[i].type == "Value"){
-            key_delete = tokens[i].value;
+            key = tokens[i].value;
         }
     }
+    char key_delete[7];
+    strcpy(key_delete, key.substr(0,7).c_str());
     temp.remove(key_delete);
     cout<<"Eliminado"<<endl;
 }
