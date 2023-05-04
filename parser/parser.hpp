@@ -191,7 +191,7 @@ void DELETE_AVL(vector<Token>& tokens, AVL temp){
             key_delete = tokens[i].value;
         }
     }
-    temp.remove()
+    temp.
     cout<<"Eliminado"<<endl;
 }
 
@@ -249,10 +249,10 @@ void Consulta_HASH(vector<Token> Tokens){
     if(Tokens[0].value == "SELECT"){
         return SELECT_HASH(Tokens,temp);
     }
-    else if(Tokens[0].value == "INSERT_HASH"){
+    else if(Tokens[0].value == "INSERT"){
         return INSERT_HASH(Tokens, temp);
     }
-    else if(Tokens[0].value == "DELETE_HASH"){
+    else if(Tokens[0].value == "DELETE"){
         return DELETE_HASH(Tokens, temp);
     }
     else{
@@ -265,10 +265,10 @@ void Consulta_AVL(vector<Token> Tokens){
     if(Tokens[0].value == "SELECT"){
         return SELECT_AVL(Tokens,temp);
     }
-    else if(Tokens[0].value == "INSERT_HASH"){
+    else if(Tokens[0].value == "INSERT"){
         return INSERT_AVL(Tokens, temp);
     }
-    else if(Tokens[0].value == "DELETE_HASH"){
+    else if(Tokens[0].value == "DELETE"){
         return DELETE_AVL(Tokens, temp);
     }
     else{
@@ -281,10 +281,10 @@ void Consulta_SECUENTIAL(vector<Token> Tokens){
     if(Tokens[0].value == "SELECT"){
         return SELECT_SECUENTIAL(Tokens,temp);
     }
-    else if(Tokens[0].value == "INSERT_HASH"){
+    else if(Tokens[0].value == "INSERT"){
         return INSERT_SECUENTIAL(Tokens, temp);
     }
-    else if(Tokens[0].value == "DELETE_HASH"){
+    else if(Tokens[0].value == "DELETE"){
         return DELETE_SECUENTIAL(Tokens, temp);
     }
     else{
