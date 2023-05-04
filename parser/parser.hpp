@@ -9,14 +9,20 @@ using namespace std;
 
 // Definimos una estructura para representar un token, que puede ser una palabra clave, un identificador, un número o un operador.
 struct Token {
-    enum Type { Keyword, Identifier, Number, Operator, Value } type;
+    std::string type;
+    //enum Type { Keyword, Identifier, Number, Operator, Value } type;
     std::string value;
 
-    Token(Type type, std::string value) : type(type), value(value) {}
+    Token(std::string type, std::string value) : type(type), value(value) {}
 };
 
 // Función para separar una cadena en tokens.
 std::vector<Token> tokenize(std::string query) {
+    string Keyword = "Keyword";
+    string Identifier = "Identifier";
+    string Number = "Number";
+    string Operator = "Operator";
+    string Value = "Value";
     std::vector<Token> tokens;
     std::string current_token;
 
@@ -32,21 +38,24 @@ std::vector<Token> tokenize(std::string query) {
         else if (c == '(' || c == ')') {
             std::string value;
             value.push_back(c);
-            tokens.push_back(Token(Token::Operator, value));
+            Token *token = new Token(Operator,value);
+            tokens.push_back(*token);
         }
 
         // Si encontramos una coma, la añadimos como un token separado.
-        else if (c == ',') {
+        else if (c == ',' || c == ';') {
             std::string value;
             value.push_back(c);
-            tokens.push_back(Token(Token::Operator, value));
+            Token *token = new Token(Operator,value);
+            tokens.push_back(*token);
         }
 
         // Si encontramos un operador, lo añadimos como un token separado.
         else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '=' || c == '>' || c == '<') {
             std::string value;
             value.push_back(c);
-            tokens.push_back(Token(Token::Operator, value));
+            Token *token = new Token(Operator,value);
+            tokens.push_back(*token);
         }
 
         // Si encontramos comillas dobles, leemos una cadena hasta la siguiente comilla doble.
@@ -62,8 +71,8 @@ std::vector<Token> tokenize(std::string query) {
                 value.push_back(query[i]);
                 i++;
             }
-            i--;
-            tokens.push_back(Token(Token::Value, value));
+            Token *token = new Token(Value,value);
+            tokens.push_back(*token);
         }
 
         // Si encontramos un dígito, leemos un número entero o decimal.
@@ -79,7 +88,8 @@ std::vector<Token> tokenize(std::string query) {
                 i++;
             }
             i--;
-            tokens.push_back(Token(Token::Number, value));
+            Token *token = new Token(Number,value);
+            tokens.push_back(*token);
         }
 
         else {
@@ -96,10 +106,12 @@ std::vector<Token> tokenize(std::string query) {
             }
             i--;
             if (value == "SELECT" || value == "INSERT" || value == "UPDATE" || value == "DELETE" || value == "TO" || value == "FROM" || value == "WHERE" || value == "ORDER" || value == "BY" || value == "AND" || value == "OR"){
-                tokens.push_back(Token(Token::Identifier, value));
+                Token *token = new Token(Identifier,value);
+                tokens.push_back(*token);
             }
             else{
-                tokens.push_back(Token(Token::Keyword, value));
+                Token *token = new Token(Keyword,value);
+                tokens.push_back(*token);
             }
         }
     }
@@ -114,16 +126,18 @@ std::vector<Token> tokenize(std::string query) {
 }*/
 
 void INSERT(vector<Token> tokens, Hash temp){
-    if(tokens[3].value != "Tienda"){
-        return cout<<"No admitido"<<endl;
+    if(tokens[2].value != "Tienda"){
+        cout<<"No admitido"<<endl;
+        return;
     }
     vector<string> valores;
     for (int j = 5; j < tokens.size(); j++) {
-        if (tokens[j].type == Token::Keyword){
-            valores.push_back(tokens[j]);
+        if (tokens[j].type == "Value" || tokens[j].type == "Number"){
+            valores.push_back(tokens[j].value);
         }
     }
-    temp.set(valores[0], valores[1], valores[2], stoi(valores[3]), stoi(valores[4]), valores[5]);
+    RecordHash agregacion(valores[0], valores[1], valores[2], stoi(valores[3]), stoi(valores[4]), valores[5]);
+    temp.set(agregacion);
     cout<<"se hizo la insercion"<<endl;
 };
 
@@ -131,15 +145,15 @@ void INSERT(vector<Token> tokens, Hash temp){
 
 }*/
 
-void DELETE(vector<Token> tokens, Hash temp){
+void DELETE(vector<Token>& tokens, Hash temp){
     if (tokens[2].value != "Tienda"){
         cout<<"No admitido"<<endl;
         return;
     }
     string key_delete = "";
     for (int i = 0; i < tokens.size(); ++i) {
-        if (tokens[i].type == Token::Value){
-            key_delete = tokens[i];
+        if (tokens[i].type == "Value"){
+            key_delete = tokens[i].value;
         }
     }
     temp.remove(key_delete);
@@ -151,16 +165,16 @@ void Consulta(vector<Token> Tokens){
     /*if(Tokens[0].value == "SELECT"){
         return SELECT(Tokens,temp);
     }*/
-    else if(Tokens[0].value == "INSERT"){
+    if(Tokens[0].value == "INSERT"){
         return INSERT(Tokens,temp);
     }
-    else if(Tokens[0].value == "UPDATE"){
+    /*else if(Tokens[0].value == "UPDATE"){
         return UPDATE(Tokens,temp);
-    }
+    }*/
     else if(Tokens[0].value == "DELETE"){
         return DELETE(Tokens,temp);
     }
     else{
-        cout<<"no es una consulta admitida"
+        cout<<"no es una consulta admitida";
     }
 }
