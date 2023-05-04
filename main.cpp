@@ -47,6 +47,16 @@ int main(){
         cout<< temp.right<<endl;
         cout<<temp.left<<endl;
     }
+
+    ifstream file("Data_from_Structurs/dataAvl.dat", ios::binary);
+//    AVL::NodeBT var1;
+//    for (int i = 0; i < 4; ++i) {
+//        file.seekg(i*sizeof(AVL::NodeBT));
+//        file.read((char*)&var1, sizeof(AVL::NodeBT));
+//        var1.data.displaypretty();
+//        cout<<var1.left<<"  "<<var1.right<<endl;
+//    }
+
     //aux.pretyprint();
 //    vector<RecordHash> prueba1 = temp.get(0);
 //    for (auto & i : prueba1) {
