@@ -26,12 +26,20 @@ int main(){
 //        }
 
 //    }
-//    AVL::RecordAVL prueba53("aaaaaaa", "bbbbbbbbbb", "f", 100, 6, "nikeb");
-//    aux.insert(prueba53);
-//    AVL::RecordAVL prueba54("ccccccc", "bbbbbbbbbbbbbbb", "f", 100, 6, "nikeb");
-//    aux.insert(prueba54);
-//    AVL::RecordAVL prueba55("ddddddd", "bbbbbbbbbbbbbbb", "f", 100, 6, "nikeb");
-   // aux.insert(prueba55);
+    AVL::RecordAVL prueba53("aaaaaaa", "bbbbbbbbbb", "f", 100, 6, "nikeb");
+    aux.insert(prueba53);
+    AVL::RecordAVL prueba54("ccccccc", "xxxxxxxxxx", "f", 100, 6, "adida");
+    aux.insert(prueba54);
+    AVL::RecordAVL prueba55("ddddddd", "zzzzzzzzzz", "m", 1020, 21, "pumas");
+    aux.insert(prueba55);
+
+    vector<AVL::NodeBT> pruebaaaa = aux.rangeSearch("aaaaaaa","zzzzzzz");
+    cout<<pruebaaaa.size()<<endl;
+    for (auto temp: pruebaaaa) {
+        cout << temp.data.cod <<endl;
+        cout<< temp.right<<endl;
+        cout<<temp.left<<endl;
+    }
 //    vector<RecordHash> prueba1 = temp.get(0);
 //    for (auto & i : prueba1) {
 //        i.display();

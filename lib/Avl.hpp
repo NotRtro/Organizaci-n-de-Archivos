@@ -54,6 +54,7 @@ public:
 private:
     long root;
     string filename;
+    long counter = 0;
 
     long sizeC(){
         ifstream file(filename, ios::binary);
@@ -64,6 +65,26 @@ private:
     }
     int sizeNode(){
         return 45;
+    }
+    void addvector(vector<NodeBT> &aux, long value){
+        NodeBT temp = getNode(value).first;
+        aux.emplace_back(temp);
+    }
+    void rangeSearch(long root, string begin, string end, vector<NodeBT> &aux) {
+        if (root == -1) {
+            return;
+        }
+        if (begin < getNode(root).first.data.cod) {
+            rangeSearch(getNode(root).first.left, begin, end, aux);
+        }
+
+        if (begin <= getNode(root).first.data.cod && end >= getNode(root).first.data.cod) {
+            addvector(aux, root);
+        }
+
+        if (end > getNode(root).first.data.cod) {
+            rangeSearch(getNode(root).first.right, begin, end, aux);
+        }
     }
 
 public:
@@ -80,6 +101,11 @@ public:
         insert(this->root, alumno1,true);
     }
 
+    vector<NodeBT> rangeSearch(string begin, string end){
+        vector<NodeBT> result;
+        rangeSearch(root, begin, end, result);
+        return result;
+    }
 private:
     RecordAVL find(long nodepos, char key[5]){
         ifstream file(filename, ios::binary);
@@ -103,30 +129,39 @@ private:
                 return temp.data;
         }
     }
-    void insert(long node, RecordAVL value, bool sit) { // sit == true -> left
+    void insert(long node, RecordAVL value, bool sit, long father = -1) { // sit == true -> left
         fstream file(filename, std::ios::out|std::ios::in|std::ios::ate);
         if (node == -1) {// sit == false -> rigth
             NodeBT temp(value);
-            NodeBT aux = getNode(node).first;
-            (sit) ? aux.left = sizeC()/sizeof(NodeBT) : aux.right = sizeC()/sizeof(NodeBT) ;
             file.seekp(0, ios::end);
-            file.write((char *) &temp, sizeof(NodeBT));
-            file.seekp(node*sizeof(NodeBT));
-            file.write((char*)&aux, sizeof(NodeBT));
+            file.write((char *)&temp, sizeof(NodeBT));
+            if(father > -1){
+                NodeBT aux = getNode(father).first;
+                (sit) ? aux.left = counter : aux.right = counter;
+                file.seekp(father*sizeof(NodeBT));
+                file.write((char*)&aux, sizeof(NodeBT));
+            }
+            counter++;
             file.close();
+            updateHeight(temp, father);
+            root = 0;
             return;
         }
         NodeBT temp;
         file.seekg(node * sizeof ( NodeBT));
         file.read((char*)&temp, sizeof(NodeBT));
-        if (temp.data.cod > value.cod)
-            insert(temp.left, value, true);
-        else if (value.cod < temp.data.cod)
-            insert(temp.right, value, false);
+        if (temp.data.cod > value.cod) {
+            file.close();
+            insert(temp.left, value, true, node);
+        }
+        else if (value.cod >= temp.data.cod) {
+            file.close();
+            insert(temp.right, value, false, node);
+        }
 
+        file.close();
         updateHeight(temp, node);
         balance(node);
-        file.close();
     }
 
     void updateHeight(NodeBT& node, long pos) {
@@ -164,6 +199,7 @@ private:
 
     }
     pair<NodeBT, long> getNode(long pos){
+        if (pos == -1) return pair<NodeBT, long>(NodeBT(),1);
         NodeBT temp;
         ifstream file(filename, ios::binary);
         file.seekg(pos * sizeof(NodeBT));
@@ -276,12 +312,14 @@ private:
                 temp.right = getNode(node).first.right;
                 file.seekp(father*sizeof (NodeBT));
                 file.write((char *)&temp, sizeof(NodeBT));
+                balance(father);
             }else if (getNode(node).first.left > -1){
                 fstream file(filename, std::ios::out | std::ios::in | std::ios::ate);
                 NodeBT temp = getNode(father).first;
                 temp.left = getNode(node).first.left;
                 file.seekp(father*sizeof (NodeBT));
                 file.write((char *)&temp, sizeof(NodeBT));
+                balance(father);
             }else{
                 fstream file(filename, std::ios::out | std::ios::in | std::ios::ate);
                 NodeBT temp = getNode(father).first;
@@ -289,20 +327,25 @@ private:
                     temp.right = -1;
                     file.seekp(father*sizeof (NodeBT));
                     file.write((char *)&temp, sizeof(NodeBT));
+                    balance(father);
                 }else if(node == temp.left){
                     temp.left = -1;
                     file.seekp(father*sizeof (NodeBT));
                     file.write((char *)&temp, sizeof(NodeBT));
+                    balance(father);
                 }else{
                     temp.right = temp.left = -1;
                     file.seekp(father*sizeof (NodeBT));
                     file.write((char *)&temp, sizeof(NodeBT));
+                    balance(father);
                 }
             }
 
         }
 
     }
+
+
 };
 
 #endif //AVLARCHIVOS_FINAL_H
