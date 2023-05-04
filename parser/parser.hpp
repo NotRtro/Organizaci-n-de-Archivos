@@ -124,9 +124,9 @@ std::vector<Token> tokenize(std::string query) {
 void SELECT_HASH(vector<Token> tokens, Hash temp){
     if(tokens[1].value == "*"){
         vector<vector<RecordHash>> temp_2 = temp.getAll();
-        for (auto i = temp_2.begin(); i != temp_2.end(); i++) {
-            for (auto j = i->begin(); j != i->end(); j++) {
-                j->display();
+        for (int i = 0; i < temp_2.size(); i++) {
+            for (int j = 0; j < temp_2[i].size(); ++j) {
+                cout<<j<<endl;
             }
         }
     }
