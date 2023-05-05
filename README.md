@@ -1,5 +1,7 @@
 # Proyecto 1: Organización de Archivos
 
+![GUI de referencia](/imagenes/capibara.jpg)
+
 Este proyecto consiste en implementar dos técnicas de organización de archivos para datos reales que se encuentran en al menos dos archivos planos. Las técnicas que se implementarán son: Sequential File, AVL File, ISAM-Sparse Index, Extendible Hashing y B+ Tree.
 
 
@@ -1094,6 +1096,11 @@ En el `main`, se crea una nueva instancia de la tabla hash, se agregan algunos e
 ![GUI de referencia](/imagenes/analisis.jpg)
 ## Consideraciones:
 
+Mostramos el buqued 0 con 100000 de datos en el sistema
+![GUI de referencia](/imagenes/prueba1.jpg)
+
+Mostramos el buqued 1 con 100000 de datos en el sistema
+![GUI de referencia](/imagenes/prueba2.jpg)
 
 Se debe escoger una de las siguientes combinaciones de técnicas de organización de archivos:
 - Sequential File o AVL File o ISAM-Sparse Index
