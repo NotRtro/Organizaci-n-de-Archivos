@@ -451,37 +451,37 @@ En este ejemplo, creamos un archivo binario llamado "miArchivo.dat" y agregamos 
 Es importante tener en cuenta que el archivo secuencial no es muy eficiente para realizar búsquedas en grandes conjuntos de datos, ya que se debe leer cada registro desde el principio del archivo hasta encontrarke el registro deseado. Además, la eliminación de registros puede ser complicada, ya que puede dejar "huecos" en el archivo si se eliminan registros intermedios.
 Lógica para las funciones:
 
-1.Search
+#### 1.Search
 Usamos la busqueda binaria para la búsqueda con las siguientes condiciones
-    1.1 Las variables m,l inician en 0, luego el u será el tamaño de nuestra data en "datosSecuencial.dat" - 1,
-    1.2 Iniciamos un bucle while con la condición (u>=l)
-    1.3 Mientras se ejecute el while, m se calculará a (u+l)/2
-    1.4 Nos moveremos en esa posicion m del registro "datosSecuencial.dat" (leyendo un registro) y compararemos con la key que estamos buscando.
-    1.5 Si key>Data_en_m, u =m-1
-    1.6 Si key<Data_en_m, l=m+1
-    1.7 Si son iguales retornar registro en la posicion m.
-    1.7 Si termina el while y el u es diferente a -1. Leemos por ultimavez en la posicion u, para "datosSecuencial.dat" y retornamos ese registro, si no solo retornamos el último registro leido, junto a un pair<int,char> que tendra como primer dato el u, y como segundo dato el caracter del ultimo registro leido.
+1.1 Las variables m,l inician en 0, luego el u será el tamaño de nuestra data en "datosSecuencial.dat" - 1.
+1.2 Iniciamos un bucle while con la condición (u>=l).
+1.3 Mientras se ejecute el while, m se calculará a (u+l)/2.
+1.4 Nos moveremos en esa posicion m del registro "datosSecuencial.dat" (leyendo un registro) y compararemos con la key que estamos buscando.
+1.5 Si key>Data_en_m, u =m-1.
+1.6 Si key<Data_en_m, l=m+1.
+1.7 Si son iguales retornar registro en la posicion m.
+1.8 Si termina el while y el u es diferente a -1. Leemos por ultimavez en la posicion u, para "datosSecuencial.dat" y retornamos ese registro, si no solo retornamos el último registro leido, junto a un pair<int,char> que tendra como primer dato el u, y como segundo dato el caracter del ultimo registro leido.
     
-2. Remove
+#### 2. Remove
 Para el Remove primero ejecutaremos el Rebuild, luego de esto evaluamos
-    2.1 Verificamos si la llave existe con la función search(key)
-    2.2 Si el registro se encuentra en "datosSecuencial.dat" verificamos a quien apunta y lo modificamos con otro caracter ejmp ('w' si apunta a otro dato del mismo archivo y 'x' si tiene un puntero a algún dato en "dataSecAux.dat")
-    2.3 Si no verificamos si está en alguna parte del "dataSecAux.dat" con un while y moviendonos con los punteros
-    2.4 Si no está retornamos que es una llave inválida
-    2.5 Si es que se encuentra realizamos la misma lógica del paso 2.2 ejmp ('y' si apunta a algún dato del mismo archivo y 'z' si apunta a algún dato del archivo "datosSecuencial.dat").
+2.1 Verificamos si la llave existe con la función search(key)
+2.2 Si el registro se encuentra en "datosSecuencial.dat" verificamos a quien apunta y lo modificamos con otro caracter ejmp ('w' si apunta a otro dato del mismo archivo y 'x' si tiene un puntero a algún dato en "dataSecAux.dat")
+2.3 Si no verificamos si está en alguna parte del "dataSecAux.dat" con un while y moviendonos con los punteros
+2.4 Si no está retornamos que es una llave inválida
+2.5 Si es que se encuentra realizamos la misma lógica del paso 2.2 ejmp ('y' si apunta a algún dato del mismo archivo y 'z' si apunta a algún dato del archivo "datosSecuencial.dat").
     
-3. Rebuild
+#### 3. Rebuild
 Para el rebuild primero leemos el header y lo guardamos en un registro temporal, además de que creamos un file temporal que contendrá todos los datos ordenados ("dataVector.dat").
-    2.1 Iniciamos un while
-    2.2 si la condición de que temporal.puntero.first!=-1 y temporal.puntero.second!='d'
-    2.3 Verificamos a quien apunta
-    2.4 Si tiene un temporal.puntero..second='a' entonces abrimos el "dataSecAux.dat", nos movemos en la posicion del registro con temporal.puntero.first y leemos ese registro, luego aquel registro lo añadimos a "dataVector.dat".
-    2.4 Si tiene un temporal.puntero..second='d' entonces abrimos el "dataSecuencial.dat", nos movemos en la posicion del registro con temporal.puntero.first y leemos ese registro, luego aquel registro lo añadimos a "dataVector.dat".
-    2.5 Si no, entonces verificamos si contiene un temporal.puntero.second= conjunto(w,x,y,z), dependiendo de cual tenga abrimos el archivo indicado como en el paso 2.2 y 2.5, luego leemos ese registro gracias al temporal.puntero.first y validamos lo mismo de su puntero.second (para cubrir el caso de si un eliminado está apuntando a un eliminado). Si contiene algún 'a' o 'd' como puntero.second entonces leemos ese regitro y lo escribimos en "dataVector.dat".
-    2.6 Repetimos el paso 2.2 hasta que se salga y cerrar el archivo "dataVector.dat"
-    2.7 Luego con los datos ordenados en "dataVector.dat", solo nos queda abrir denuevo el archivo "dataVector.dat" y el archivo "dataSecuencial.dat" e iterar en todos los adtos del "dataVector.dat", si leemos un registro que tiene un puntero.first diferente a -1 entonces reemplazamos ese puntero por i+1 y su puntero.second a 'd'.
-    2.8 luego escribimos ese registro en "dataSecuencial.dat"
-    2.9 Limpiamos todos los datos en "DataSecAux.dat" y eliminamos el registro "dataVector.dat"
+2.1 Iniciamos un while.
+2.2 si la condición de que temporal.puntero.first!=-1 y temporal.puntero.second!='d'.
+2.3 Verificamos a quien apunta.
+2.4 Si tiene un temporal.puntero..second='a' entonces abrimos el "dataSecAux.dat", nos movemos en la posicion del registro con temporal.puntero.first y leemos ese registro, luego aquel registro lo añadimos a "dataVector.dat".
+2.5 Si tiene un temporal.puntero..second='d' entonces abrimos el "dataSecuencial.dat", nos movemos en la posicion del registro con temporal.puntero.first y leemos ese registro, luego aquel registro lo añadimos a "dataVector.dat".
+2.6 Si no, entonces verificamos si contiene un temporal.puntero.second= conjunto(w,x,y,z), dependiendo de cual tenga abrimos el archivo indicado como en el paso 2.2 y 2.7, luego leemos ese registro gracias al temporal.puntero.first y validamos lo mismo de su puntero.second (para cubrir el caso de si un eliminado está apuntando a un eliminado). Si contiene algún 'a' o 'd' como puntero.second entonces leemos ese regitro y lo escribimos en "dataVector.dat".
+2.8 Repetimos el paso 2.2 hasta que se salga y cerrar el archivo "dataVector.dat".
+2.9 Luego con los datos ordenados en "dataVector.dat", solo nos queda abrir denuevo el archivo "dataVector.dat" y el archivo "dataSecuencial.dat" e iterar en todos los adtos del "dataVector.dat", si leemos un registro que tiene un puntero.first diferente a -1 entonces reemplazamos ese puntero por i+1 y su puntero.second a 'd'.
+2.10 luego escribimos ese registro en "dataSecuencial.dat".
+2.11 Limpiamos todos los datos en "DataSecAux.dat" y eliminamos el registro "dataVector.dat".
     
 ### 2. AVL File:
 La estrategia de organización de archivos AVLFile en C++ es una técnica que permite almacenar registros en un archivo de forma ordenada y balanceada mediante la utilización de árboles AVL. Esta técnica es útil cuando se necesitan realizar operaciones de búsqueda, inserción y eliminación eficientes en un archivo de datos.
