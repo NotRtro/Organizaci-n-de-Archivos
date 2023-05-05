@@ -125,8 +125,9 @@ void SELECT_HASH(vector<Token> tokens, Hash temp){
     if(tokens[1].value == "*"){
         vector<vector<RecordHash>> temp_2 = temp.getAll();
         for (int i = 0; i < temp_2.size(); i++) {
-            for (int j = 0; j < temp_2[i].size(); ++j) {
-                cout<<j<<endl;
+            for (auto j = temp_2[i].begin(); j != temp_2[i].end(); ++j) {
+                cout<<"Codigo       Prenda      Genero      Precio      Stock       Marca"<<endl;
+                cout<<j->cod<<"  "<<j->prenda<<j->genero<<"  "<<j->precio<<"  "<<j->stock<<"  "<<j->marca<<"  "<<endl;
             }
         }
     }
@@ -143,7 +144,9 @@ void INSERT_HASH(vector<Token> tokens, Hash temp){
             valores.push_back(tokens[j].value);
         }
     }
-    RecordHash agregacion(valores[0], valores[1], valores[2], stoi(valores[3]), stoi(valores[4]), valores[5]);
+    float precio = stof(valores[3]);
+    int stock = stoi(valores[4]);
+    RecordHash agregacion(valores[0], valores[1], valores[2], precio, stock, valores[5]);
     temp.set(agregacion);
     cout<<"se hizo la insercion"<<endl;
 };
@@ -163,11 +166,27 @@ void DELETE_HASH(vector<Token>& tokens, Hash temp){
     cout<<"Eliminado"<<endl;
 }
 
+void Consulta_HASH(vector<Token> Tokens){
+    Hash temp("Data_from_Structurs/dataHash.dat");
+    if(Tokens[0].value == "SELECT"){
+        return SELECT_HASH(Tokens,temp);
+    }
+    else if(Tokens[0].value == "INSERT"){
+        return INSERT_HASH(Tokens, temp);
+    }
+    else if(Tokens[0].value == "DELETE"){
+        return DELETE_HASH(Tokens, temp);
+    }
+    else{
+        cout<<"no es una consulta admitida";
+    }
+}
+
 /*void SELECT_AVL(vector<Token> tokens, AVL temp){
     if(tokens[1].value == "*"){
         vector<NodeBT> vec_temp = temp.rangeSearch("aaaaaaa","aaaaaaa");
     }
-}*/
+}
 
 void INSERT_AVL(vector<Token> tokens, AVL temp){
     if(tokens[2].value != "Tienda"){
@@ -248,27 +267,11 @@ void DELETE_SECUENTIAL(vector<Token>& tokens, squential temp){
     cout<<"Eliminado"<<endl;
 }
 
-void Consulta_HASH(vector<Token> Tokens){
-    Hash temp("Data_from_Structurs/dataHash.dat");
-    if(Tokens[0].value == "SELECT"){
-        return SELECT_HASH(Tokens,temp);
-    }
-    else if(Tokens[0].value == "INSERT"){
-        return INSERT_HASH(Tokens, temp);
-    }
-    else if(Tokens[0].value == "DELETE"){
-        return DELETE_HASH(Tokens, temp);
-    }
-    else{
-        cout<<"no es una consulta admitida";
-    }
-}
-
 void Consulta_AVL(vector<Token> Tokens){
     AVL temp("Data_from_Structurs/dataAvl.dat");
     /*if(Tokens[0].value == "SELECT"){
         return SELECT_AVL(Tokens,temp);
-    }*/
+    }
     if(Tokens[0].value == "INSERT"){
         return INSERT_AVL(Tokens, temp);
     }
@@ -280,7 +283,7 @@ void Consulta_AVL(vector<Token> Tokens){
     }
 }
 
-/*void Consulta_SECUENTIAL(vector<Token> Tokens){
+void Consulta_SECUENTIAL(vector<Token> Tokens){
     squential temp();
     if(Tokens[0].value == "SELECT"){
         return SELECT_SECUENTIAL(Tokens,temp);

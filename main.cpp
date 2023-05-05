@@ -1,12 +1,9 @@
 #include <iostream>
-#include "lib/Avl.hpp"
-#include "lib/Hash.hpp"
-#include "lib/Secuential.hpp"
 #include "parser/parser.hpp"
 using namespace std;
 
 int main(){
-    Hash temp("Data_from_Structurs/dataHash.dat");
+    /*Hash temp("Data_from_Structurs/dataHash.dat");
     AVL aux("Data_from_Structurs/dataAvl.dat");
 
     // casos de prueb
@@ -66,7 +63,7 @@ int main(){
     //temp.set(temp2);
     //temp.set(temp3);
     //temp.set(temp4);
-    //temp.set(temp5);
+    //temp.set(temp5);*/
     std::string sql;
     cout<<"Ingresa consulta"<<endl;
     getline(cin, sql);
