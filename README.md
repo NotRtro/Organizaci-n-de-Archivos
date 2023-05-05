@@ -1089,6 +1089,7 @@ La función `print` se utiliza para imprimir el contenido de la tabla hash en la
 
 En el `main`, se crea una nueva instancia de la tabla hash, se agregan algunos elementos y se imprime el contenido de la tabla hash. Luego se realizan algunas búsquedas de elementos en la tabla hash.
 
+## Analisis de inserccion de datos
 
 ## Consideraciones:
 
