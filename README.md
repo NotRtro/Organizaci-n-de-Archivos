@@ -809,18 +809,10 @@ private:
 #endif //AVLARCHIVOS_FINAL_H
 
 ```
-En el código anterior, las funciones **rotacionSimpleIzquierda**, **rotacionDobleIzquierda**, **rotacionSimpleDerecha** y **rotacionDobleDerecha** son funciones que realizan las rotaciones necesarias en el árbol AVL para mantener su equilibrio. La función altura devuelve la altura de un nodo del árbol.
-
-Para realizar una búsqueda en un archivo **AVLFile**, se puede implementar una función recursiva que recorra el árbol AVL comparando las llaves de los registros hasta encontrar el registro deseado. Por ejemplo:
-```cpp
-Registro buscarRegistroAVL(NodoAVL *raiz, int key) {
-    if (raiz == NULL) {
-        Registro registroVacio;
-        return registroVacio;
-    } else if (key == raiz->registro.key) {
-        return raiz->registro;
-    } else
-```
+#### 1.- la primera estrategia usada en el AVL es que nuestro root siempre sea el 0, esto debido a que jugamos con los punteros y con las posiciones dentro del archivo para lograr rotaciones correctas y un balanceo preciso y con la misma estrategia la altura.
+#### 2.- segunda estrategia que hemos usado es un booleano denominado "sit" el cual nos da a conocer en que parte sera insertado el siguiente nodo, ya sea true que significa que va a la izquierda o false que es agregarlo a la derecha y asi saber siempre en que posicion debe ir para que vaya con la secuencia de un avl.
+#### 3.- la tercera estrategia usada es la de una funcion que retorna un pair el cual contiene un NodeBt el cual lo leemeos del archivo y su posicion dentro de este para luego de las modificaciones o las actualizaciones puede ser escrito de manera correcta.
+#### 4.- La ultima optimizacion o agregado que le dimos fue que escribimos un nodo con atributos record, left, rigth y tamaño, y asi de esta forma poder tener un ingreso de datos más limpio dentro de nuestro AVL.
 
 
 
@@ -1082,8 +1074,6 @@ private:
 
 En este ejemplo, la estructura `Block` representa un bloque de datos que contiene un vector de enteros. La clase `HashTable` representa la tabla hash y contiene un vector de bloques y un vector de enteros que representa el directorio. El tamaño de bloque se define como una constante `BLOCK_SIZE`. La función `hash` calcula el índice de la tabla hash en función de la clave del elemento.
 
-La función `split` se utiliza para dividir un bloque cuando se agrega un nuevo elemento y el bloque está lleno. El directorio y la tabla de bloques se actualizan para reflejar la nueva estructura de bloques.
-
 La función `insert` se utiliza para agregar un nuevo elemento a la tabla hash. Si el bloque correspondiente está lleno, se utiliza la función `split` para dividir el bloque y agregar el nuevo elemento en el bloque correspondiente.
 
 La función `find` se utiliza para buscar un elemento en la tabla hash. Si el elemento se encuentra en el bloque correspondiente, la función devuelve `true`. En caso contrario, devuelve `false`.
@@ -1091,6 +1081,9 @@ La función `find` se utiliza para buscar un elemento en la tabla hash. Si el el
 La función `print` se utiliza para imprimir el contenido de la tabla hash en la consola.
 
 En el `main`, se crea una nueva instancia de la tabla hash, se agregan algunos elementos y se imprime el contenido de la tabla hash. Luego se realizan algunas búsquedas de elementos en la tabla hash.
+
+#### 1.- Una optimizacion que le dimos a nuestro hash es sobre los set, que no aceptan datos repetidos, y que nuestro fillfactor puede ser variable segun como lo consideremos mejor nosotros, de esta manera logramos un hash variable.
+#### 2.- En nuestro caso usamos arrays para almacenar la data de los records dentro de la misma key. Por esta razon nuestro record va en una clase Entry la cual es la que va escrita dentro del archivo, de esta fomra logramos una escritura simple y mas organizada, de la misma forma vemos que podemos optimizar usando templates o modificando el codigo para permitir indexaciones diferentes a la que ya tenemos.
 
 ## Analisis de inserccion de datos
 ![GUI de referencia](/imagenes/analisis.jpg)
