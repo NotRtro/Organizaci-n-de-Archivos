@@ -15,11 +15,11 @@ El resto solo seria ejecutar el código
 ## Estructura del proyecto:
 
 ## Colaboradores:
-ANGEL TITO
-Rodo Vilcarromero
-Ronaldo Flores
-Salva
-Jeffry 
+- Tito Berrocal, Angel Ulises
+- Vilcarromero Moscoso, Rodo Arturo
+- Flores Soto, Ronaldo Dylan
+- Olivares Leandro, Salvador Samuel
+- Hilario Quintana, Jeffry Arturo
 
 
 ### 1. Sequential File:
@@ -817,7 +817,7 @@ private:
 
 
 
-### 4. Extendible Hashing:
+### 3. Extendible Hashing:
 La estrategia de organización de archivos Extendible Hashing en C++ es un método de almacenamiento y búsqueda de datos en archivos que se basa en la utilización de una tabla hash y la división de los datos en bloques de tamaño fijo para facilitar la búsqueda y la actualización de los mismos.
 
 En esta estrategia, se utiliza una tabla hash que contiene punteros a bloques de datos. Cada bloque de datos contiene un número fijo de elementos y está identificado por un número de bloque. Cuando se agrega un nuevo elemento a la tabla hash, se utiliza la función de hash para calcular su clave y se determina el número de bloque correspondiente. Si el bloque está lleno, se divide en dos bloques de la misma capacidad y se actualiza la tabla hash para que los nuevos bloques puedan ser encontrados en función de la clave del elemento.
@@ -1085,7 +1085,7 @@ En el `main`, se crea una nueva instancia de la tabla hash, se agregan algunos e
 #### 1.- Una optimizacion que le dimos a nuestro hash es sobre los set, que no aceptan datos repetidos, y que nuestro fillfactor puede ser variable segun como lo consideremos mejor nosotros, de esta manera logramos un hash variable.
 #### 2.- En nuestro caso usamos arrays para almacenar la data de los records dentro de la misma key. Por esta razon nuestro record va en una clase Entry la cual es la que va escrita dentro del archivo, de esta fomra logramos una escritura simple y mas organizada, de la misma forma vemos que podemos optimizar usando templates o modificando el codigo para permitir indexaciones diferentes a la que ya tenemos.
 
-# Parser SQL
+### 4.Parser SQL
 
 ## Descripción
 
