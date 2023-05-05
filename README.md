@@ -1085,6 +1085,24 @@ En el `main`, se crea una nueva instancia de la tabla hash, se agregan algunos e
 #### 1.- Una optimizacion que le dimos a nuestro hash es sobre los set, que no aceptan datos repetidos, y que nuestro fillfactor puede ser variable segun como lo consideremos mejor nosotros, de esta manera logramos un hash variable.
 #### 2.- En nuestro caso usamos arrays para almacenar la data de los records dentro de la misma key. Por esta razon nuestro record va en una clase Entry la cual es la que va escrita dentro del archivo, de esta fomra logramos una escritura simple y mas organizada, de la misma forma vemos que podemos optimizar usando templates o modificando el codigo para permitir indexaciones diferentes a la que ya tenemos.
 
+# Parser SQL
+
+## Descripción
+
+Este programa es un analizador de consultas SQL básico. Utiliza una estructura llamada Token para representar cada token, que tiene dos campos: el tipo de token y su valor. Los tipos de token incluyen "Keyword" (palabra clave), "Identifier" (identificador), "Number" (número), "Operator" (operador) y "Value" (valor).
+
+La función principal del programa es tokenize, que recibe una cadena de texto y devuelve un vector de tokens. El programa itera sobre cada caracter de la cadena y determina el tipo de token correspondiente a cada parte de la cadena.
+
+En el caso de encontrar un paréntesis, una coma o un operador, se crea un nuevo token y se agrega a la lista de tokens con el tipo "Operator". Si se encuentra una cadena entre comillas dobles, se lee la cadena hasta encontrar otras comillas dobles y se agrega un nuevo token con la cadena con tipo "Value". Si se encuentra un número, se lee el número completo y se agrega un nuevo token con el número con el tipo "Number". Si se encuentra una palabra, se lee la palabra completa y se agrega un nuevo token con la palabra con el tipo "Keyword" siempre y cuando este no sea un "SELECT", "INSERT" y "DELETE", en tal caso se agrega con el tipo "Identifier".
+
+El programa incluye tres funciones principales que operan en una estructura Hash:
+- SELECT_HASH recibe un vector de tokens y un objeto Hash y realiza una operación de consulta en la estructura Hash. En este caso, el programa imprime los registros almacenados en la estructura Hash.
+- INSERT_HASH recibe un vector de tokens y un objeto Hash y realiza una operación de inserción en la estructura Hash. En este caso, el programa agrega un registro a la estructura Hash.
+- DELETE_HASH recibe un vector de tokens y un objeto Hash y realiza una operación de eliminación en la estructura Hash. En este caso, el programa elimina un registro a la estructura Hash.
+
+La función Consulta_HASH indica qué función de las anteriores se ejecutará, en el caso de que no sea una consulta permitida se mostrará un mensaje en la consola indicando que la consulta no es admitida y se detendrá el programa.
+
+
 ## Analisis de inserccion de datos
 ![GUI de referencia](/imagenes/analisis.jpg)
 ## Consideraciones:
