@@ -1085,9 +1085,9 @@ En el `main`, se crea una nueva instancia de la tabla hash, se agregan algunos e
 #### 1.- Una optimizacion que le dimos a nuestro hash es sobre los set, que no aceptan datos repetidos, y que nuestro fillfactor puede ser variable segun como lo consideremos mejor nosotros, de esta manera logramos un hash variable.
 #### 2.- En nuestro caso usamos arrays para almacenar la data de los records dentro de la misma key. Por esta razon nuestro record va en una clase Entry la cual es la que va escrita dentro del archivo, de esta fomra logramos una escritura simple y mas organizada, de la misma forma vemos que podemos optimizar usando templates o modificando el codigo para permitir indexaciones diferentes a la que ya tenemos.
 
-### 4.Parser SQL
+### 4. Parser SQL:
 
-## Descripción
+#### Descripción
 
 Este programa es un analizador de consultas SQL básico. Utiliza una estructura llamada Token para representar cada token, que tiene dos campos: el tipo de token y su valor. Los tipos de token incluyen "Keyword" (palabra clave), "Identifier" (identificador), "Number" (número), "Operator" (operador) y "Value" (valor).
 
